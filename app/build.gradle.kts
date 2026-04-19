@@ -9,6 +9,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
     id("com.diffplug.spotless") version "6.25.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 repositories {
@@ -52,4 +53,35 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
+}
+
+// Configure shadow jar to create fat JAR with all dependencies
+tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+    archiveClassifier.set("")
+    manifest {
+        attributes(mapOf("Main-Class" to "org.example.App"))
+    }
+}
+
+// Disable application plugin distribution tasks since we use shadowJar
+tasks.named("startScripts") {
+    enabled = false
+}
+
+tasks.named("distTar") {
+    enabled = false
+}
+
+tasks.named("distZip") {
+    enabled = false
+}
+
+// Disable regular jar since we use shadowJar
+tasks.jar {
+    enabled = false
+}
+
+// Make build depend on shadowJar
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }

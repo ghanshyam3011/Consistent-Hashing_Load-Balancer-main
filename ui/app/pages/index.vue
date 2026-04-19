@@ -4,8 +4,8 @@ import { type Stats } from "../../types/stats";
 import StatCard from "../components/StatCard.vue";
 import ServerTable from "../components/ServerTable.vue";
 
-// WebSocket configuration
-const wsUrl = ref("ws://localhost:8081");
+// WebSocket configuration - dynamic so it works from any IP
+const wsUrl = ref(`ws://${window.location.hostname}:8081`);
 let ws: WebSocket | null = null;
 
 // State
