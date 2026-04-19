@@ -1,0 +1,31 @@
+# Prometheus configuration for Consistent Hash Load Balancer monitoring
+
+global:
+  scrape_interval: 15s      # Default scrape interval
+  evaluation_interval: 15s  # Default evaluation interval
+  external_labels:
+    monitor: 'load-balancer-monitor'
+
+# Alerting configuration (optional - can be enhanced later)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: []
+
+# Load rules files
+# rule_files: []
+
+# Scrape configurations
+scrape_configs:
+  # Load Balancer metrics endpoint
+  - job_name: 'load-balancer'
+    static_configs:
+      - targets: ['172.17.0.1:8080']
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    metrics_path: '/metrics'
+
+  # Prometheus self-monitoring (optional)
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
